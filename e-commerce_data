@@ -1,0 +1,28 @@
+#!/bin/bash
+
+itemStates=("1001" "1002" "1003" "1004" "1005" "1006")
+port=1234
+
+while true
+do
+	userId=$(shuf -i 100-130 -n 1)
+	itemId=$(shuf -i 1-20 -n 1)
+
+	number=$((RANDOM % ${#itemStates[@]}))
+	itemState="${itemStates[number]}"
+
+	min=10
+	max=100
+	amount=$(printf "%.1f" $(awk -v min=$min -v max=$max 'BEGIN{srand(); print min+rand()*(max-min)}'))
+	
+	date=$(date +"%Y-%m-%d %H:%M:%S")
+	startTime=$(date -d "$date_string" +"%s")
+	random_number=$((RANDOM % 60))
+	endTime=$(($(date -d "$date_string" +"%s") + random_number))
+
+	echo "$userId,$itemId,$itemState,$amount,$startTime,$endTime"
+
+	echo "$userId,$itemId,$itemState,$amount,$startTime,$endTime" | nc localhost $port
+	
+	sleep 1
+done

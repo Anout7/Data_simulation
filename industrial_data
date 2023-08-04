@@ -1,0 +1,34 @@
+#!/bin/bash
+
+dir="/file"
+number=("0" "1")
+handleState=("0" "1")
+warnings=("预警" "非预警")
+machineState=("运行" "待机")
+
+while true
+do
+	e_id=$(shuf -i 100-130 -n 1)
+        p_id=$(shuf -i 100-130 -n 1)
+        c_id=$(shuf -i 100-130 -n 1)
+
+	min=36
+	max=40
+	temp=$(printf "%.1f" $(awk -v min=$min -v max=$max 'BEGIN{srand(); print min+rand()*(max-min)}'))
+
+
+	random_number=$((RANDOM % ${#number[@]}))
+	r_handleState="${handleState[random_number]}"
+        r_warnings="${warnings[random_number]}"
+        r_machineState="${machineState[random_number]}"
+	
+	time=$(date +"%Y-%m-%d %H:%M:%S")
+
+	echo "EnvironmentData($e_id,$temp,$time)" >> "$dir/environmentData.log"
+        echo "ProduceRecord($p_id,$r_handleState,$time)" >> "$dir/produceRecord.log"
+        echo "ChangeRecord($c_id,$r_warnings,$r_machineState,$time)" >> "$dir/changeRecord.log"
+
+
+	sleep 1
+done
+	
